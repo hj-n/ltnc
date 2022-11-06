@@ -81,7 +81,6 @@ class LSNC:
 		lc_mat[lc_mat < 0] = 0
 		lc = 1 - np.sum(lc_mat / (raw_cvm_mat + 0.000001)) / (self.label_num * (self.label_num - 1) / 2)
 
-
 		## set the dictionary to return
 		self.return_dict = {
 			"ls": ls,

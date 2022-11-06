@@ -1,5 +1,12 @@
 from snc.snc import SNC 
 from metrics_provider import GlobalMeasure, LocalMeasure
+from sklearn.metrics import silhouette_score
+
+def silhouette(emb, labels):
+	"""
+	compute the silhouette score
+	"""
+	return silhouette_score(emb, labels)
 
 
 def stead_cohev(raw, emb):
