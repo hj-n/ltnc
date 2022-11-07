@@ -2,6 +2,17 @@ from snc.snc import SNC
 from metrics_provider import GlobalMeasure, LocalMeasure
 from sklearn.metrics import silhouette_score
 import time
+from lsnc import lsnc
+
+def lsnc_btw_ch_time(raw, emb, labels):
+	"""
+	compute the time duration of betweenness and closeness
+	"""
+	start = time.time()
+	lsnc_obj = lsnc.LSNC(raw, emb, labels)
+	lsnc_obj.run()
+	end = time.time()
+	return end - start
 
 def silhouette(emb, labels):
 	"""
