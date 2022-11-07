@@ -216,3 +216,4 @@ cython_debug/
 
 *.npy
 *.png
+*.pdf
