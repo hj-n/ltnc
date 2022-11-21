@@ -73,13 +73,19 @@ class LSNC:
 				emb_cvm_mat[label_i, label_j] = self.cvm(emb_pair, emb_pair_label)
 			
 		## compute the label-stretching and label-compression score
+
+
 		ls_mat = (emb_cvm_mat - raw_cvm_mat) 
+
+	
+
 		ls_mat[ls_mat < 0] = 0
-		ls = 1 - np.sum(ls_mat / (emb_cvm_mat + 0.000001)) / (self.label_num * (self.label_num - 1) / 2)
+		ls = 1 - np.sum(ls_mat) / (self.label_num * (self.label_num - 1) / 2)
 
 		lc_mat = (raw_cvm_mat - emb_cvm_mat)
+
 		lc_mat[lc_mat < 0] = 0
-		lc = 1 - np.sum(lc_mat / (raw_cvm_mat + 0.000001)) / (self.label_num * (self.label_num - 1) / 2)
+		lc = 1 - np.sum(lc_mat) / (self.label_num * (self.label_num - 1) / 2)
 
 		## set the dictionary to return
 		self.return_dict = {

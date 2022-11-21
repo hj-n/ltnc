@@ -217,3 +217,5 @@ cython_debug/
 *.npy
 *.png
 *.pdf
+*.json
+*.csv
