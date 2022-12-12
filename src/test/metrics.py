@@ -3,6 +3,7 @@ from metrics_provider import GlobalMeasure, LocalMeasure
 from sklearn.metrics import silhouette_score
 import time
 from lsnc import lsnc
+import numpy as np
 
 def lsnc_btw_ch_time(raw, emb, labels):
 	"""
@@ -19,6 +20,48 @@ def silhouette(emb, labels):
 	compute the silhouette score
 	"""
 	return silhouette_score(emb, labels)
+
+def dsc(emb, labels):
+	"""
+	compute the distance consistency
+	"""
+	## contert labels to range from 0 to len(np.unique(labels)) - 1
+	labels = np.array(labels)
+	unique_labels = np.unique(labels)
+	for i in range(len(unique_labels)):
+		labels[labels == unique_labels[i]] = i
+
+	## compute centroids
+	centroids = []
+	for i in range(len(np.unique(labels))):
+		centroids.append(np.mean(emb[labels == i], axis = 0))
+	
+	## compute distance consistency
+	consistent_num = 0
+	for idx in range(emb.shape[0]):
+		current_label = -1
+		current_dist = 1e10
+		for c_idx in range(len(centroids)):
+			dist = np.linalg.norm(emb[idx] - centroids[c_idx])
+			if dist < current_dist:
+				current_dist = dist
+				current_label = c_idx
+		if current_label == labels[idx]:
+			consistent_num += 1
+	
+	return consistent_num / emb.shape[0]
+
+def dsc_time(emb, labels):
+	"""
+	compute the time duration of distance consistency 
+	"""
+	start = time.time()
+	dsc(emb, labels)
+	end = time.time()
+	return end - start
+
+
+
 
 def silhouette_time(emb, labels):
 	"""
