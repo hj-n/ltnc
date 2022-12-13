@@ -3,6 +3,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 import seaborn as sns
+from lsnc.cvm import *
 
 
 class LSNC:
@@ -40,7 +41,8 @@ class LSNC:
 
 		## set the cvm to be used (currently only btw_ch is supported)
 		self.cvm = {
-			"btw_ch": ch.btw
+			"btw_ch": btw_ch,
+			"dsc": dsc
 		}[cvm]
 
 	def run(self):

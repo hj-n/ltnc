@@ -10,7 +10,17 @@ def lsnc_btw_ch_time(raw, emb, labels):
 	compute the time duration of betweenness and closeness
 	"""
 	start = time.time()
-	lsnc_obj = lsnc.LSNC(raw, emb, labels)
+	lsnc_obj = lsnc.LSNC(raw, emb, labels, cvm="btw_ch")
+	lsnc_obj.run()
+	end = time.time()
+	return end - start
+
+def lsnc_dsc_time(raw, emb, labels):
+	"""
+	compute the time duration of distance consistency
+	"""
+	start = time.time()
+	lsnc_obj = lsnc.LSNC(raw, emb, labels, cvm="dsc")
 	lsnc_obj.run()
 	end = time.time()
 	return end - start

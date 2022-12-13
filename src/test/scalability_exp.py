@@ -37,6 +37,8 @@ def run_all(dr_measure, datasets):
 def run_single(dr_measure, raw, emb, label):
 	if dr_measure == "lsnc_btw_ch":
 		return lsnc_btw_ch_time(raw, emb, label)
+	elif dr_measure == "lsnc_dsc":
+		return lsnc_dsc_time(raw, emb, label)
 	elif dr_measure == "snc":
 		return stead_cohev_time(raw, emb)
 	elif dr_measure == "silhouette":
@@ -63,7 +65,7 @@ for directory in os.listdir("./labeled-datasets/npy/"):
 	):
 		datasets.append(directory)
 
-dr_measure = "dsc"
+dr_measure = "lsnc_dsc"
 time_list = np.array(run_all(dr_measure, datasets))
 
 np.save(f"./scalability_results/{dr_measure}_time.npy", time_list)
