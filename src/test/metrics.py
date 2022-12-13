@@ -49,7 +49,7 @@ def dsc(emb, labels):
 		if current_label == labels[idx]:
 			consistent_num += 1
 	
-	return consistent_num / emb.shape[0]
+	return 1 - consistent_num / emb.shape[0]
 
 def dsc_time(emb, labels):
 	"""

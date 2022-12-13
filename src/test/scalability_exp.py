@@ -49,6 +49,8 @@ def run_single(dr_measure, raw, emb, label):
 		return kl_div_time(raw, emb)
 	elif dr_measure == "dtm":
 		return dtm_time(raw, emb)
+	elif dr_measure == "dsc":
+		return dsc_time(emb, label)
 
 ## generating the list of datasets
 datasets = []
@@ -61,7 +63,7 @@ for directory in os.listdir("./labeled-datasets/npy/"):
 	):
 		datasets.append(directory)
 
-dr_measure = "mrre"
+dr_measure = "dsc"
 time_list = np.array(run_all(dr_measure, datasets))
 
 np.save(f"./scalability_results/{dr_measure}_time.npy", time_list)
