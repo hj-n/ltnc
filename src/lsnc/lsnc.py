@@ -42,7 +42,7 @@ class LSNC:
 		## set the cvm to be used (currently only btw_ch is supported)
 		self.cvm = {
 			"btw_ch": btw_ch,
-			"dsc": dsc
+			"dsc": dsc_normalize
 		}[cvm]
 
 	def run(self):

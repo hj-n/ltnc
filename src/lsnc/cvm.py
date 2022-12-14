@@ -4,7 +4,7 @@ import numpy as np
 def btw_ch(data, labels):
 	return ch.btw(data, labels)
 
-def dsc(data, labels):
+def dsc_normalize(data, labels):
 	"""
 	compute the distance consistency
 	"""
@@ -32,4 +32,4 @@ def dsc(data, labels):
 		if current_label == labels[idx]:
 			consistent_num += 1
 	
-	return 1 - consistent_num / data.shape[0]
+	return (consistent_num / data.shape[0] - 0.5) * 2
