@@ -6,7 +6,7 @@ Application with hierarchical clustering (for Yun-Hsin)
 import scipy.cluster.hierarchy as shc
 #from sklearn.cluster import AgglomerativeClustering
 import numpy as np 
-from lsnc.lsnc import LSNC
+from lsnc import LSNC
 
 
 
@@ -18,7 +18,7 @@ class HierarchicalLSNC:
 		self.raw    = np.array(raw)
 		self.emb    = np.array(emb)
 		#self.labels = np.array(labels)
-		#self.cvm    = cvm
+		self.cvm    = cvm
 		self.clustering = None
 		self.dists = None
 
@@ -42,7 +42,7 @@ class HierarchicalLSNC:
 			# get labels, which started with 1 by default in scipy, thus minus by 1
 			assignment = np.array(shc.fcluster(self.clustering, threshold, criterion='distance')) - 1
 			raw, emb, labels = self._filter_one_point_cluster(assignment)
-			print(f"Remove {np.size(np.unique(assignment)) - np.size(np.unique(labels))} one-point clusters")
+			# print(f"Remove {np.size(np.unique(assignment)) - np.size(np.unique(labels))} one-point clusters")
 			#print(raw.shape, emb.shape, labels.shape)
 			#uniques, counts = np.unique(labels, return_counts=True)
 			#print(counts)
@@ -78,6 +78,6 @@ class HierarchicalLSNC:
 		return filtered_raw, filtered_emb, reformat_labels
 
 	def _compute_lsnc(self, raw, emb, labels):
-		lsnc_obj = LSNC(raw, emb, labels)
+		lsnc_obj = LSNC(raw, emb, labels, cvm="dsc")
 		result = lsnc_obj.run()
 		return result
