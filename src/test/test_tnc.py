@@ -122,7 +122,7 @@ else:
 
 
 
-plt.figure(figsize=(9, 3.55))
+plt.figure(figsize=(7.5, 3.1))
 
 sns.set_style("whitegrid")
 sns.pointplot(x="measure", y="score", hue="dr", data=df, dodge=0.5, join=False, order=["trust", "conti", "mrre_lh", "mrre_hl"])
