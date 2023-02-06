@@ -78,6 +78,6 @@ class HierarchicalLSNC:
 		return filtered_raw, filtered_emb, reformat_labels
 
 	def _compute_lsnc(self, raw, emb, labels):
-		lsnc_obj = LSNC(raw, emb, labels, cvm="dsc")
+		lsnc_obj = LSNC(raw, emb, labels, cvm=self.cvm)
 		result = lsnc_obj.run()
 		return result

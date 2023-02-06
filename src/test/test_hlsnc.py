@@ -55,17 +55,17 @@ if not os.path.exists(f'./shc_data/data_granularity_{GRANULARITY}_{MEASURE}.json
 		for idx, (raw, emb, label) in enumerate(zip(raw_list, emb_list, label_list)):
 			print(f'Dataset: {idx}')
 			#if idx != 0: continue
-				
-			hlsnc = HierarchicalLSNC(raw, emb, cvm=MEASURE)
-			result = hlsnc.run(granularity=GRANULARITY)
-			frames.append({
-							"dataset": idx,
-							"ls": result["ls"],
-							"lc": result["lc"],
-							"unique_raw_label": np.unique(label).tolist()
-				})
-			# except: 
-				# print(f"Error in: {idx}")
+			try:
+				hlsnc = HierarchicalLSNC(raw, emb, cvm=MEASURE)
+				result = hlsnc.run(granularity=GRANULARITY)
+				frames.append({
+								"dataset": idx,
+								"ls": result["ls"],
+								"lc": result["lc"],
+								"unique_raw_label": np.unique(label).tolist()
+					})
+			except: 
+				print(f"Error in: {idx}")
 		return frames
 
 	dr_types = ['tsne', 'umap', 'pca', 'iso', 'lle', 'densmap']
@@ -111,12 +111,21 @@ lc_df = stats.loc[stats['metric'] == 'lc']
 
 ls_df = stats.loc[stats['metric'] == 'ls']
 
+lc_df = lc_df[lc_df['score'] <= 1]
+lc_df = lc_df[lc_df['score'] >= 0]
+
+ls_df = ls_df[ls_df['score'] <= 1]
+ls_df = ls_df[ls_df['score'] >= 0]
+
+
+sns.set_style("whitegrid")
+
 fig, ax = plt.subplots(1, 2, figsize=(12, 5))
 
-sns.lineplot(x = "level", y = "score", hue = "type", data = ls_df, ax = ax[0], ci=0)
-ax[0].set_title("Label-Continuity (Label-Stretching)")
-sns.lineplot(x = "level", y = "score", hue = "type", data = lc_df, ax = ax[1], ci=0, legend=False)
-ax[1].set_title("Label-Trustworthiness (Label-Compression)")
+sns.lineplot(x = "level", y = "score", hue = "type", data = ls_df, ax = ax[1], ci=0)
+ax[0].set_title("Label-Continuity")
+sns.lineplot(x = "level", y = "score", hue = "type", data = lc_df, ax = ax[0], ci=0, legend=False)
+ax[1].set_title("Label-Trustworthiness")
 
 plt.savefig(f"./shc_data/results_{GRANULARITY}_{MEASURE}.png")
 plt.savefig(f"./shc_data/results_{GRANULARITY}_{MEASURE}.pdf")

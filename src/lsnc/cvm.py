@@ -1,4 +1,3 @@
-from btwim import calinski_harabasz as ch
 import numpy as np
 
 def btw_ch(data, labels):
@@ -54,11 +53,18 @@ def shift(X, label):
 	compactness = 0
 	separability = 0	
 	for i in range(n_clusters):
-		compactness += np.sum(np.exp(np.sqrt(np.sum(np.square(X[label == i, :] - centroids[i, :]), axis=1))) ** (1 / std))
-		separability += ( np.exp(np.linalg.norm(centroids[i, :] - entire_centroid))  ** (1 / std))* X[label == i, :].shape[0] 
+		# if np.exp(np.linalg.norm(centroids[i, :] - entire_centroid) / std) == np.inf:
+		# 	raise Exception("None")
+		# print(np.sqrt(np.sum(np.square(X[label == i, :] - centroids[i, :]), axis=1)) / std)
+		compactness += np.sum(np.exp(np.sqrt(np.sum(np.square(X[label == i, :] - centroids[i, :]), axis=1)) / std, dtype=np.float128))
+		separability += ( np.exp(np.linalg.norm(centroids[i, :] - entire_centroid) / std, dtype=np.float128))* X[label == i, :].shape[0] 
+
 
 
 	result = (separability *  (n_samples - 2)) / compactness 
+
+	if compactness == np.inf and separability == np.inf:
+		raise Exception("None")
 
 	return result
 
@@ -71,6 +77,8 @@ def shift_range(X, label, iter_num):
 		e_val_sum += shift(X, label)
 	e_val = e_val_sum / iter_num
 	e_val_result = 1 / (1 + (e_val) ** (-1))
+	if e_val_result == 1:
+		return 0
 	return (orig_result - e_val_result) / (1 - e_val_result)
 
 def shift_range_class(X, label, iter_num):

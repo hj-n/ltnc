@@ -2,6 +2,9 @@ from snc.snc import SNC
 from metrics_provider import GlobalMeasure, LocalMeasure
 from sklearn.metrics import silhouette_score
 import time
+import sys
+sys.path.append('../')
+sys.path.append("../lsnc")
 from lsnc import lsnc
 import numpy as np
 
