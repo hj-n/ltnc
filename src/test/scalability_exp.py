@@ -45,6 +45,8 @@ def run_single(dr_measure, raw, emb, label):
 		return silhouette_time(emb, label)
 	elif dr_measure == "tnc":
 		return trust_conti_time(raw, emb)
+	elif dr_measure == "s_tnc":
+		return supervised_trust_conti_time(raw, emb, label)
 	elif dr_measure == "mrre":
 		return mrre_time(raw, emb)
 	elif dr_measure == "kl_div":
@@ -65,7 +67,7 @@ for directory in os.listdir("./labeled-datasets/npy/"):
 	):
 		datasets.append(directory)
 
-dr_measure = "lsnc_dsc"
+dr_measure = "s_tnc"
 time_list = np.array(run_all(dr_measure, datasets))
 
 np.save(f"./scalability_results/{dr_measure}_time.npy", time_list)
