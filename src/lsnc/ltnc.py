@@ -5,11 +5,11 @@ import seaborn as sns
 from cvm import *
 
 
-class LSNC:
+class LabelTNC:
 	def __init__(self, raw, emb, labels, cvm="btw_ch"):
 		"""
-		Initialize LSNC class.
-		Run label-stretching and label-compression algorithm that evaluates
+		Initialize Label-TNC class.
+		Run label-trustworthiness and label-continuity algorithm that evaluates
 		the reliability of dimensionality reduction algorithms
 
 		Parameters
@@ -22,8 +22,7 @@ class LSNC:
 			Labels of original data
 		cvm: str, optional
 			Cluster valididation measure to use. Default is btw_ch (Between-dataset calinski-harabasz index)
-			Currently, only btw_ch is supported. 
-
+			Current support: (btw_ch, DSC (Distance Consistency))
 		"""
 		self.raw = np.array(raw)
 		self.emb = np.array(emb)
@@ -74,64 +73,23 @@ class LSNC:
 				emb_cvm_mat[label_i, label_j] = self.cvm(emb_pair, emb_pair_label)
 			
 		## compute the label-stretching and label-compression score
+		lt_mat = raw_cvm_mat - emb_cvm_mat
+		lt_mat[lt_mat < 0] = 0
+		lt = 1 - np.sum(lt_mat) / (self.label_num * (self.label_num - 1) / 2)
 
-
-		ls_mat = (emb_cvm_mat - raw_cvm_mat) 
-
-	
-
-		ls_mat[ls_mat < 0] = 0
-		ls = 1 - np.sum(ls_mat) / (self.label_num * (self.label_num - 1) / 2)
-
-		lc_mat = (raw_cvm_mat - emb_cvm_mat)
-
+		lc_mat = emb_cvm_mat - raw_cvm_mat
 		lc_mat[lc_mat < 0] = 0
 		lc = 1 - np.sum(lc_mat) / (self.label_num * (self.label_num - 1) / 2)
 
 		## set the dictionary to return
 		self.return_dict = {
-			"ls": ls,
+			"lt": lt,
 			"lc": lc,
-			"f1": 2 * ls * lc / (ls + lc),
+			"f1": 2 * lt * lc / (lt + lc),
 			"raw_mat": raw_cvm_mat,
 			"emb_mat": emb_cvm_mat,
-			"ls_mat": ls_mat,
+			"lt_mat": lt_mat,
 			"lc_mat": lc_mat
 		}
 
 		return self.return_dict
-
-	def visualize_heatmap(self, mat=["raw_mat", "emb_mat", "ls_mat", "lc_mat"], figsize=(10, 10), save_path=None):
-		"""
-		visualize the heatmap of the label-stretching and label-compression score
-		the self.run() function should be run before this function
-		save the heatmap as a file if save_path is given
-		"""
-
-		## set the figure size
-		plt.figure(figsize=(figsize[0] * len(mat), figsize[1]))
-
-		fig, ax = plt.subplots(1, len(mat))
-
-		for i, m in enumerate(mat):
-			## set the title
-			if m == "raw_mat":
-				title = "Raw data"
-			elif m == "emb_mat":
-				title = "Embedding"
-			elif m == "ls_mat":
-				title = "Label-stretching score"
-			elif m == "lc_mat":
-				title = "Label-compression score"
-			else:
-				raise ValueError("mat should be one of [raw_mat, emb_mat, ls_mat, lc_mat]")
-
-			## set the heatmap
-			sns.heatmap(self.return_dict[m], ax=ax[i], cmap="Blues", annot=True, fmt=".2f")
-			ax[i].set_title(title)
-
-		## save the figure
-		if save_path is not None:
-			plt.savefig(save_path)
-		
-		plt.show()
