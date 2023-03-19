@@ -30,34 +30,34 @@ import numpy as np
 import numba
 
 
+@numba.njit(parallel=True)
+def get_fast_knn(arr, n_neighbors):
+	"""
+	requires much less memory && much less time for big data
+	"""
+	knn_indices = np.empty((arr.shape[0], n_neighbors), dtype=np.int32)
+	knn_ranks = np.empty((arr.shape[0], arr.shape[0]), dtype=np.int32)
 
+	for i in numba.prange(arr.shape[0]):
+		dists = np.empty(arr.shape[0], dtype=np.float32)
+		for j in numba.prange(arr.shape[0]):
+			dist = 0.0
+			for d in numba.prange(arr.shape[1]):
+				dist += (arr[i][d] - arr[j][d]) ** 2
+			dists[j] = dist
+
+		v = dists.argsort(kind="quicksort")
+		knn_ranks[i] = v.argsort(kind="quicksort")
+		knn_indices[i] = v[1 : n_neighbors + 1]
+
+	return knn_indices, knn_ranks
 
 def class_aware_trust_conti(raw, emb, labels, k = 10):
 	"""
 	compute the Class Aware trustworthiness & continuity (ClassNeRV paper)
 	"""
 
-	@numba.njit(parallel=True)
-	def get_fast_knn(arr, n_neighbors):
-		"""
-		requires much less memory && much less time for big data
-		"""
-		knn_indices = np.empty((arr.shape[0], n_neighbors), dtype=np.int32)
-		knn_ranks = np.empty((arr.shape[0], arr.shape[0]), dtype=np.int32)
-
-		for i in numba.prange(arr.shape[0]):
-			dists = np.empty(arr.shape[0], dtype=np.float32)
-			for j in numba.prange(arr.shape[0]):
-				dist = 0.0
-				for d in numba.prange(arr.shape[1]):
-					dist += (arr[i][d] - arr[j][d]) ** 2
-				dists[j] = dist
-
-			v = dists.argsort(kind="quicksort")
-			knn_ranks[i] = v.argsort(kind="quicksort")
-			knn_indices[i] = v[1 : n_neighbors + 1]
-
-		return knn_indices, knn_ranks
+	
 
 	nidx_raw, rank_raw = get_fast_knn(raw, k)
 	nidx_emb, rank_emb = get_fast_knn(emb, k)
@@ -103,7 +103,7 @@ def ltnc_dsc(raw, emb, labels):
 	"""
 	Compute distance consistency-based ltnc
 	"""
-	ltnc_obj = ltnc.LTNC(raw, emb, labels, cvm="dsc")
+	ltnc_obj = ltnc.LabelTNC(raw, emb, labels, cvm="dsc")
 	return ltnc_obj.run()
 
 def ltnc_btw_ch_time(raw, emb, labels):
@@ -121,7 +121,7 @@ def ltnc_dsc_time(raw, emb, labels):
 	compute the time duration of distance consistency
 	"""
 	start = time.time()
-	ltnc_obj = ltnc.LTNC(raw, emb, labels, cvm="dsc")
+	ltnc_obj = ltnc.LabelTNC(raw, emb, labels, cvm="dsc")
 	ltnc_obj.run()
 	end = time.time()
 	return end - start

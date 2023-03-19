@@ -25,7 +25,7 @@ warnings.filterwarnings("ignore")
 
 PATH = "../libs/labeled-datasets_embedding/"
 PATH_RAW = "../libs/labeled-datasets/npy"
-DATASETS = os.listdir(PATH)
+DATASETS = os.listdir(PATH_RAW)
 
 DR_LIST = ["lda", "umap", "tsne", "pca", "isomap"]
 DR_NAME = ["LDA", "UMAP", "t-SNE", "PCA", "Isomap"]
