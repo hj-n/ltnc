@@ -4,8 +4,8 @@ from sklearn.metrics import silhouette_score
 import time
 import sys
 sys.path.append('../')
-sys.path.append("../lsnc")
-from lsnc import lsnc
+sys.path.append("../ltnc")
+from ltnc import ltnc
 import numpy as np
 import numba
 
@@ -76,8 +76,8 @@ def lsnc_btw_ch_time(raw, emb, labels):
 	compute the time duration of betweenness and closeness
 	"""
 	start = time.time()
-	lsnc_obj = lsnc.LSNC(raw, emb, labels, cvm="btw_ch")
-	lsnc_obj.run()
+	ltnc_obj = ltnc.LabelTNC(raw, emb, labels, cvm="btw_ch")
+	ltnc_obj.run()
 	end = time.time()
 	return end - start
 
@@ -86,8 +86,8 @@ def lsnc_dsc_time(raw, emb, labels):
 	compute the time duration of distance consistency
 	"""
 	start = time.time()
-	lsnc_obj = lsnc.LSNC(raw, emb, labels, cvm="dsc")
-	lsnc_obj.run()
+	ltnc_obj = ltnc.LabelTNC(raw, emb, labels, cvm="dsc")
+	ltnc_obj.run()
 	end = time.time()
 	return end - start
 

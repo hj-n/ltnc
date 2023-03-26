@@ -25,57 +25,82 @@ warnings.filterwarnings("ignore")
 
 PATH = "../libs/labeled-datasets_embedding/"
 PATH_RAW = "../libs/labeled-datasets/npy"
-DATASETS = os.listdir(PATH_RAW)
 
-DR_LIST = ["lda", "umap", "tsne", "pca", "isomap"]
-DR_NAME = ["LDA", "UMAP", "t-SNE", "PCA", "Isomap"]
-METRICS = ["Silhouette", "1 - DSC"]
+DR_LIST = ["lda", "umap", "tsne"]
+DR_NAME = ["LDA", "UMAP", "t-SNE"]
+METRICS = ["Silhouette"]
 METRICS_EXECUTOR = {
-	"silhouette": silhouette,
-  "1 - dsc": lambda emb, labels: 1 - dsc(emb, labels)
+	"silhouette": silhouette
 }
 
-if not os.path.exists("./results/01_preliminary.csv"):
 
-	dataset_arr = []
-	dr_arr = []
-	metric_arr = []
-	score_arr = []
-	for dataset in tqdm(DATASETS):
-		if not os.path.exists(f"{PATH}/{dataset}/lda.npy"):
-			continue
-		for dr in DR_LIST:
-			emb = np.load(f"{PATH}/{dataset}/{dr}.npy")
-			labels = np.load(f"{PATH_RAW}/{dataset}/label.npy")
-			for metric in METRICS:
-				score = METRICS_EXECUTOR[metric.lower()](emb, labels)
-				dataset_arr.append(dataset)
-				dr_arr.append(dr)
-				metric_arr.append(metric)
-				score_arr.append(score)
 
-	df = pd.DataFrame({
-		"Dataset": dataset_arr,
-		"DR Technique": dr_arr,
-		"Metric": metric_arr,
-		"Score": score_arr
-	})
+DATASETS_HIGH = [
+ 'olivetti_faces', 'weather', 'ph_recognition', 'seeds',
+ 'pen_based_recognition_of_handwritten_digits', 'iris', 'coil20',
+ 'optical_recognition_of_handwritten_digits', 'wireless_indoor_localization','mnist64'
+]
 
-	df.to_csv("./results/01_preliminary.csv", index=False)
-else:
-	df = pd.read_csv("./results/01_preliminary.csv")
+# DATASETS_INTER = [
+#  'glass_identification', 'cifar10', 'wine_quality', 'extyaleb', 'flickr_material_database', 
+#   'turkish_music_emotion', 'breast_tissue', 'birds_bones_and_living_habits', 'cnae9', 'yeast', 
+
+# ]
+
+DATASETS_LOW = [
+ 'epileptic_seizure_recognition', 'customer_classification','skillcraft1_master_table_dataset',
+ 'street_view_house_numbers', 'heart_disease', 'wine_quality', 'world12d', 
+'orbit_classification_for_prediction_nasa', 'siberian_weather_stats', 'hate_speech', 
+
+]
+
+def run_preliminary(file_name, datasets):
+	if not os.path.exists(f"./results/{file_name}.csv"):
+		dataset_arr = []
+		dr_arr = []
+		metric_arr = []
+		score_arr = []
+		for dataset in tqdm(datasets):
+			if not os.path.exists(f"{PATH}/{dataset}/lda.npy"):
+				continue
+			for dr in DR_LIST:
+				emb = np.load(f"{PATH}/{dataset}/{dr}.npy")
+				labels = np.load(f"{PATH_RAW}/{dataset}/label.npy")
+				for metric in METRICS:
+					score = METRICS_EXECUTOR[metric.lower()](emb, labels)
+					dataset_arr.append(dataset)
+					dr_arr.append(dr)
+					metric_arr.append(metric)
+					score_arr.append(score)
+				
+
+		df = pd.DataFrame({
+			"Dataset": dataset_arr,
+			"DR Technique": dr_arr,
+			"Metric": metric_arr,
+			"Score": score_arr
+		})
+
+		df.to_csv(f"./results/{file_name}.csv", index=False)
+	else:
+		df = pd.read_csv(f"./results/{file_name}.csv")
+	return df
+
+df_high = run_preliminary("01_preliminary_high", DATASETS_HIGH)
+df_low = run_preliminary("01_preliminary_low", DATASETS_LOW)
 
 
 
 sns.set_style("whitegrid")
-fig, ax = plt.subplots(1, 2, figsize=(8, 3))
-for i, metric in enumerate(METRICS):
-  sns.pointplot(x="DR Technique", y="Score", hue="DR Technique", data=df[df["Metric"] == metric], ax=ax[i])
-  ax[i].set_title(metric)
-  ax[i].set_xticklabels(DR_NAME)
+fig, ax = plt.subplots(2, 1, figsize=(6, 2.6), sharex=True)
+for i, df in enumerate([df_high, df_low]):
+	sns.pointplot(y="DR Technique", x="Score", hue="DR Technique", data=df, ax=ax[i])
+	ax[i].set_title("Datasets with Good CLM" if i == 0 else "Datasets with Bad CLM")
+	ax[i].set_yticklabels(DR_NAME)
+	ax[i].legend().remove()
 
-  ax[i].legend().remove()
-  
+	ax[i].set_xlabel("Silhouette Coefficient Score")
+
 plt.tight_layout()
 
 plt.savefig("./plot/01_preliminary.png", dpi=300)

@@ -61,44 +61,47 @@ ls_dsc_df = ls_dsc_df[ls_dsc_df['score'] >= 0]
 
 sns.set_style("whitegrid")
 
-fig, ax = plt.subplots(1, 5, figsize=(21, 5))
+fig, ax = plt.subplots(1, 4, figsize=(17, 2.5))
 
 sns.lineplot(x = 'level', y = 'score', hue = 'type', data = lc_btw_ch_df, ax = ax[0], ci=0, legend=False)
-ax[0].set_title('Label-Trustworhiness ($CH_{btwn}$)')
+ax[0].set_title('(A) Label-Trustworhiness [$CH_{btwn}$]')
 
 sns.lineplot(x = 'level', y = 'score', hue = 'type', data = ls_btw_ch_df, ax = ax[1], ci=0, legend=False)
-ax[1].set_title('Label-Continuity ($CH_{btwn}$)')
-
-ax[0].get_shared_y_axes().join(ax[0], ax[1])
+ax[1].set_title('(B) Label-Continuity [$CH_{btwn}$]')
 ax[1].set_ylabel('')
-ax[1].set_yticks([])
 
 
 sns.lineplot(x = 'level', y = 'score', hue = 'type', data = lc_dsc_df, ax = ax[2], ci=0)
-ax[2].set_title('Label-Trustworhiness ($DSC$)')
+ax[2].set_title('(C) Label-Trustworhiness [DSC]')
 ax[2].set_ylabel('')
 
 ## place the legned outside the plot (bottom)
-ax[2].legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), ncol=6)
+ax[2].legend(loc='upper center', bbox_to_anchor=(-0.4, -0.3), ncol=6)
 ## change the texts in the legend to [t-SNE, UMAP, PCA, Isomap, LLE, Densmap]
 handles, labels = ax[2].get_legend_handles_labels()
-ax[2].legend(handles, ['t-SNE', 'UMAP', 'PCA', 'Isomap', 'LLE', 'Densmap'], loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=6)
+ax[2].legend(handles, ['t-SNE', 'UMAP', 'PCA', 'Isomap', 'LLE', 'Densmap'], loc='upper center', bbox_to_anchor=(-0.1, -0.22), ncol=6)
+
+
 
 sns.lineplot(x = 'level', y = 'score', hue = 'type', data = ls_dsc_df, ax = ax[3], ci=0, legend=False)
-ax[3].set_title('Label-Continuity ($DSC$)')
-
-ax[2].get_shared_y_axes().join(ax[2], ax[3])
+ax[3].set_title('(D) Label-Continuity [DSC]')
 ax[3].set_ylabel('')
-ax[3].set_yticks([])
 
-sns.lineplot(x = 'level', y = 'score', hue = 'type', data = ls_dsc_df, ax = ax[4], ci=0, legend=False)
-ax[4].set_title('Label-Continuity ($DSC$) / Zoomed')
-
-ax[4].set_ylabel('')
-
+ax[0].set_xlabel("Cluster granularity")
+ax[1].set_xlabel("Cluster granularity")
+ax[2].set_xlabel("Cluster granularity")
+ax[3].set_xlabel("Cluster granularity")
 
 
-
+## add text to the plot
+ax[0].text(-1, 0.403, "($fine$)", fontsize=10, ha="left")
+ax[0].text(20, 0.403, "($coarse$)", fontsize=10, ha="right")
+ax[1].text(-1, 0.798, "($fine$)", fontsize=10, ha="left")
+ax[1].text(20, 0.798, "($coarse$)", fontsize=10, ha="right")
+ax[2].text(-1, 0.554, "($fine$)", fontsize=10, ha="left")
+ax[2].text(20, 0.554, "($coarse$)", fontsize=10, ha="right")
+ax[3].text(-1, 0.9917, "($fine$)", fontsize=10, ha="left")
+ax[3].text(20, 0.9917, "($coarse$)", fontsize=10, ha="right")
 # sns.lineplot(x = 'level', y = 'score', hue = 'type', data = lc_btw_ch_df, ax = ax[4])
 
 
