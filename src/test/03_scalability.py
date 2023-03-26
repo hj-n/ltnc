@@ -27,8 +27,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-PATH_RAW = "../libs/labeled-datasets/npy/"
-PATH_EMB = "../libs/labeled-datasets_embedding/"
+PATH_RAW = "../../data/labeled-datasets/npy/"
+PATH_EMB = "../../data/labeled-datasets_embedding/"
 
 DR_MEASURES = {
   "Label-T&C (DSC)": ltnc_dsc_time,

@@ -13,13 +13,13 @@ import sensitivity_helpers as sh
 Experiment B-1 
 """
 
-raw    = np.load("../libs/spheres_data/data/raw.npy")
-labels = np.load("../libs/spheres_data/data/label.npy")
+raw    = np.load("../../data/spheres_data/data/raw.npy")
+labels = np.load("../../data/spheres_data/data/label.npy")
 
 ## load embeddings
 emb_arr = []
 for i in range(25):
-  emb_arr.append(np.load(f"../libs/spheres_data/data/overlapping/circle_{i}.npy"))
+  emb_arr.append(np.load(f"../../data/spheres_data/data/overlapping/circle_{i}.npy"))
 
 results = sh.compute_metrics(raw, emb_arr, labels)
 results["Angle btw two discs"] = np.linspace(60, 0, 25)
@@ -34,7 +34,7 @@ Experiment B-2
 ## load embeddings
 emb_arr = []
 for i in range(25):
-	emb_arr.append(np.load(f"../libs/spheres_data/data/overlapping_more/circle_{i}.npy"))
+	emb_arr.append(np.load(f"../../data/spheres_data/data/overlapping_more/circle_{i}.npy"))
 
 results = sh.compute_metrics(raw, emb_arr, labels)
 results["Dist. to the origin"] = np.linspace(4, 0, 25)

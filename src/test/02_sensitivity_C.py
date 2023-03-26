@@ -9,8 +9,8 @@ import pandas as pd
 sys.path.append("../libs")
 import sensitivity_helpers as sh
 
-raw    = np.load("../libs/labeled-datasets/npy/fashion_mnist/data.npy")
-labels = np.load("../libs/labeled-datasets/npy/fashion_mnist/label.npy")
+raw    = np.load("../../data/labeled-datasets/npy/fashion_mnist/data.npy")
+labels = np.load("../../data/labeled-datasets/npy/fashion_mnist/label.npy")
 
 max_pc  = 10
 emb_pca = PCA(n_components=max_pc).fit_transform(raw)

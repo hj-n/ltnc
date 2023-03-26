@@ -9,8 +9,9 @@ import pandas as pd
 sys.path.append("../libs")
 import sensitivity_helpers as sh
 
-raw    = np.load("../libs/labeled-datasets/npy/coil20/data.npy")
-labels = np.load("../libs/labeled-datasets/npy/coil20/label.npy")
+raw    = np.load("../../data/labeled-datasets/npy/coil20/data.npy")
+labels = np.load("../../data/labeled-datasets/npy/coil20/label.npy")
+
 
 emb_skeleton = umap.UMAP().fit_transform(raw)
 emb_random   = np.random.rand(emb_skeleton.shape[0], emb_skeleton.shape[1])

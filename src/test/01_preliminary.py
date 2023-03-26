@@ -23,8 +23,8 @@ from tqdm import tqdm
 import warnings
 warnings.filterwarnings("ignore")
 
-PATH = "../libs/labeled-datasets_embedding/"
-PATH_RAW = "../libs/labeled-datasets/npy"
+PATH = "../../data/labeled-datasets_embedding/"
+PATH_RAW = "../../data/labeled-datasets/npy"
 
 DR_LIST = ["lda", "umap", "tsne"]
 DR_NAME = ["LDA", "UMAP", "t-SNE"]
