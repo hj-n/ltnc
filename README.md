@@ -48,6 +48,8 @@ print("Label-Continuity (LC):", lc_score)
 
 `raw` is the original (raw) high-dimensional data which used to generate multidimensional projections. It should be a 2D array (or a 2D np array) with shape `(n_samples, n_dim)` where `n_samples` denotes the number of data points in dataset and `n_dim` is the original size of dimensionality (number of features). `emb` is the projected (embedded) data of `raw` (i.e., MDP result). It should be a 2D array (or a 2D np array) with shape `(n_samples, n_reduced_dim)` where `n_reduced_dim` denotes the dimensionality of projection. `labels` should be a 1d array with length `n_samples` which holds the categorical information of class labels.
 
+## Requirements
+
 ## Reproducing Experiments
 
 You can simply run the python scripts in `./src/test/` to reproduce the experiments presented in our paper.
@@ -66,6 +68,10 @@ The Brief explanation of each code is as follows:
 - `04_app_tsne_perplexity_heatmap.py`: Reproduce the Fashion-MNIST examination in application 1 (Section 6.1)
 - `05_app_hierarchical_ltnc.py`: Reproduce the application 2 with hierarchical ltnc (Section 6.2)
 - `05_app_hierarchical_ltnc_figure.py`: Generate a figure, summarizing the results of application 2 (Section 6.2)
+
+The execution of the experiments need to be done in the order we presented above.
+Also, the execution requires the data files installed in the `./data/` directory.
+Please place the `.zip` file which can be downloadable at [here](https://TODO) in the `./data/` directory and unzip it. Then, the codes will be able to properly run.
 
 
 ## API
@@ -149,5 +155,8 @@ print(result["lt"])
 print(result["lc"])
 ```
 
+### Reference
+
+Label-T&C is a product of an academic paper ***"Classes are not Clusters: Improving Label-based Evaluation of Dimensionality Reduction"***. Bibtex will be updated soon.
 
 
