@@ -89,8 +89,10 @@ for MEASURE in MEASURES:
 				'dr_type': dr_type,
 		})
 
-	frame_df = pd.DataFrame(frames)
-	frame_df.to_csv(f"./results/05_app_hierarchical_ltnc_{GRANULARITY}_{MEASURE}.csv", index=False)
+	with open(f"./results/05_app_hierarchical_ltnc_{GRANULARITY}_{MEASURE}.json", "w") as f:
+		json.dump(frames, f)
+
+
 
 
 print("Finished!!")
