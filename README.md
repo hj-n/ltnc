@@ -53,6 +53,7 @@ print("Label-Continuity (LC):", lc_score)
 
 ### `LabelTNC` class in `src/ltnc/ltnc.py`
 
+
 #### `__init__(self, raw, emb, labels, cvm="btw_ch")`
 
 Initializes the Label-TNC class.
@@ -84,4 +85,46 @@ Runs the algorithm and returns the score of Label-Trustworthiness (LT) and Label
     - `lc_mat`: Label-pairwise Label-Continuity matrix
 
 
+### `HierarchicalLTNC` class in `src/ltnc/hierarchical_ltnc.py`
 
+#### `__init__(self, raw, emb, labels=[], cvm="btw_ch")`
+
+Initializes the HierarchicalLTNC class.
+
+**Parameters:**
+
+- `raw`: numpy.ndarray, shape (n, d)
+    - Original data.
+- `emb`: numpy.ndarray, shape (m, d) where m < n
+    - Embedding of the original data.
+- `cvm`: str, optional, default: "btw_ch"
+    - Cluster validation measure to use. Currently supported: "btw_ch" (Between-dataset Calinski-Harabasz Index), "dsc" (Distance Consistency).
+
+#### `run(self, granularity=5)`
+
+Runs the hierarchical clustering algorithm and computes the LTNC score for each hierarchy.
+
+**Parameters:**
+
+- `granularity`: int, optional, default: 5
+    - The number of granularity levels to compute LTNC scores for.
+
+**Returns:**
+
+- A dictionary with the following keys:
+    - `lt`: A list of LTNC scores for Label-Trustworthiness from the lowest level (fine-grained) to the highest level (coarse-grained).
+    - `lc`: A list of LTNC scores for Label-Continuity from the lowest level (fine-grained) to the highest level (coarse-grained).
+
+**Example usage:**
+
+```python
+from hierarchical_ltnc import HierarchicalLTNC
+
+raw = ...
+emb = ...
+
+hltnc = HierarchicalLTNC(raw, emb)
+result = hltnc.run()
+
+print(result["lt"])
+print(result["lc"])
