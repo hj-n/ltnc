@@ -1,3 +1,6 @@
+"""
+SENSITIVITY ANALYSIS (Section 5.1) - DRAWING FIGURE
+"""
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd

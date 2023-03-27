@@ -1,3 +1,6 @@
+"""
+APPLICATION - t-SNE Perplexity Analysis (Main experiment)
+"""
 from numba import cuda
 import pandas as pd
 import os
