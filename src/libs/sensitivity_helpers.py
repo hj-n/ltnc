@@ -6,6 +6,11 @@ sys.path.append('../libs')
 from ltnc import ltnc
 import metrics as mts
 
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+from matplotlib.lines import Line2D
+import seaborn as sns
+
 from tqdm import tqdm
 
 DR_MEASURES = [
@@ -21,6 +26,20 @@ DR_MEASURES_NAME = [
 	"Steadiness", "Cohesiveness", "1 - KL-Divergence", "1 - DTM", #### measures w/o labels
   "CA-Trustworthiness", "CA-Continuity", "1 - DSC", "Silhouette", #### measures w/ labels
 ]
+
+DR_MEASURES_LINESTYLE = [
+	"solid", "dashed", "solid", "dashed",    #### ours
+	"solid", "dashed", "solid", "dashed", "solid", "dashed", #### measures w/o labels 
+	(5, (10, 3)), (5, (10, 3)), "solid", "dashed", (5, (10, 3)), (5, (10, 3)) #### measures w/ labels
+]
+tab10 = sns.color_palette("tab10", 10)
+DR_MEASURES_COLOR = [
+	tab10[0], tab10[0], tab10[1], tab10[1],     #### ours
+	tab10[2], tab10[2], tab10[3], tab10[3], tab10[4], tab10[4],  #### measures w/o labels
+	tab10[5], tab10[6], tab10[7], tab10[7], tab10[8], tab10[9]   #### measures w/ labels
+]
+DR_MEASURES_TEXT_COLOR = ["red"] * 4  + ["blue"] * 8 + ["purple"] * 4
+
 
 K_CANDIDATES = [5, 10, 15, 20, 25] ## k candiates for kNN
 SIGMA_CANDIDATES = [0.01, 0.1, 1]  ## sigma candiates for Gaussian kernel
@@ -98,4 +117,33 @@ def compute_metrics(raw_arr, emb_arr, labels):
 	
 	return results
 
-		
+
+def lineplot_ax(results, ax, index_range, x_label, y_label, title=None, invert_x_axis=False, show_x_label=False, show_y_label=False, show_title=False, xtick_int=False):
+	x_list = results[x_label]
+	for idx in range(index_range[0], index_range[1]):
+		ax.plot(
+			x_list, results[DR_MEASURES[idx]],
+			label = DR_MEASURES_NAME[idx], linestyle = DR_MEASURES_LINESTYLE[idx], 
+			color = DR_MEASURES_COLOR[idx],linewidth = 1.3
+		)
+
+	if invert_x_axis:
+		ax.invert_xaxis()
+	if show_x_label:
+		ax.set_xlabel(x_label)
+	if show_y_label:
+		ax.set_ylabel(y_label)
+	if xtick_int:
+		ax.xaxis.set_major_locator(ticker.MultipleLocator(2))
+	if show_title:
+		ax.set_title(title, fontsize=17)
+	
+
+def legend_ax(bbox_to_anchor, ncol, fontsize, ax):
+	legend_elements = []
+	for i, name in enumerate(DR_MEASURES_NAME):
+		legend_elements.append(Line2D([0], [0], color=DR_MEASURES_COLOR[i], lw=1.5, label=name, linestyle=DR_MEASURES_LINESTYLE[i]))
+
+	ax.legend(handles=legend_elements, loc="upper center", bbox_to_anchor=bbox_to_anchor, ncol=ncol, fontsize=fontsize)
+	for i, text in enumerate(ax.get_legend().get_texts()):
+		text.set_color(DR_MEASURES_TEXT_COLOR[i])
