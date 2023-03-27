@@ -7,7 +7,7 @@ It addresses the shortcomings of traditional evaluation methods using class labe
 
 Label-T quantifies the distortion caused by class compression, with a lower score indicating that points of different classes are closer in the embedding compared to the original data. Label-C evaluates distortion related to class stretching, where a lower score signifies that points of different classes are more stretched in the embedding compared to the original data.
 
-Currently, Label-T&C is developed as a standalone python library.
+Currently, Label-T&C is developed as a standalone python library. In this repository, we provide the measures along with the codes for reproducing our academic paper ***"Classes are not Clusters: Improving Label-based Evaluation of Dimensionality Reduction"*** that introduces Label-T&C.
 
 ## Installation & Usage
 
@@ -128,3 +128,10 @@ result = hltnc.run()
 
 print(result["lt"])
 print(result["lc"])
+```
+
+## Reproducing Experiments
+
+You can simply run the python scripts in `./src/test/` to reproduce the experiments presented in our paper.
+The Brief explanation of each code is as follows:
+
