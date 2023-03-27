@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from matplotlib.lines import Line2D
 import seaborn as sns
+import numpy as np
 
 from tqdm import tqdm
 
@@ -32,14 +33,21 @@ DR_MEASURES_LINESTYLE = [
 	"solid", "dashed", "solid", "dashed", "solid", "dashed", #### measures w/o labels 
 	(5, (10, 3)), (5, (10, 3)), "solid", "dashed", (5, (10, 3)), (5, (10, 3)) #### measures w/ labels
 ]
-tab10 = sns.color_palette("tab10", 10)
+tab10  = sns.color_palette("tab10", 10)
+dark10 = sns.color_palette("dark", 10)
 DR_MEASURES_COLOR = [
 	tab10[0], tab10[0], tab10[1], tab10[1],     #### ours
 	tab10[2], tab10[2], tab10[3], tab10[3], tab10[4], tab10[4],  #### measures w/o labels
 	tab10[5], tab10[6], tab10[7], tab10[7], tab10[8], tab10[9]   #### measures w/ labels
 ]
-DR_MEASURES_TEXT_COLOR = ["red"] * 4  + ["blue"] * 8 + ["purple"] * 4
+DR_MEASURES_PAIRCOLOR = [
+	tab10[0], dark10[0], tab10[1], dark10[1],     #### ours
+	tab10[2], dark10[2], tab10[3], dark10[3], tab10[4], dark10[4],  #### measures w/o labels
+	tab10[5], tab10[6], tab10[7], dark10[7], tab10[8], tab10[9]   #### measures w/ labels
+]
 
+DR_MEASURES_TEXT_COLOR = ["red"] * 4  + ["blue"] * 8 + ["purple"] * 4
+DR_MEASURES_MINUS_ONE = {"kl_div", "dtm"}
 
 K_CANDIDATES = [5, 10, 15, 20, 25] ## k candiates for kNN
 SIGMA_CANDIDATES = [0.01, 0.1, 1]  ## sigma candiates for Gaussian kernel
@@ -147,3 +155,44 @@ def legend_ax(bbox_to_anchor, ncol, fontsize, ax):
 	ax.legend(handles=legend_elements, loc="upper center", bbox_to_anchor=bbox_to_anchor, ncol=ncol, fontsize=fontsize)
 	for i, text in enumerate(ax.get_legend().get_texts()):
 		text.set_color(DR_MEASURES_TEXT_COLOR[i])
+
+
+def lineplot_agg(results, pair_idx_arr, titles, file_path):
+	fig, axs = plt.subplots(1, len(pair_idx_arr), figsize=(3 * len(pair_idx_arr), 3))
+	for i, pair in enumerate(pair_idx_arr):
+		if type(pair) == tuple:
+			filter_arr_first = results["measure"] == pair[0]
+			filter_arr_second = results["measure"] == pair[1]
+			if DR_MEASURES[pair[0]] in DR_MEASURES_MINUS_ONE:
+				results.loc[filter_arr_first, "score"] = 1 - results.loc[filter_arr_first, "score"]
+			if DR_MEASURES[pair[1]] in DR_MEASURES_MINUS_ONE:
+				results.loc[filter_arr_second, "score"] = 1 - results.loc[filter_arr_second, "score"]
+			filter_arr = np.logical_or(filter_arr_first, filter_arr_second)
+			palette = [DR_MEASURES_PAIRCOLOR[pair[0]], DR_MEASURES_PAIRCOLOR[pair[1]]]
+			hue_order = [DR_MEASURES_NAME[pair[0]], DR_MEASURES_NAME[pair[1]]]
+		else:
+			filter_arr = results["measure"] == pair
+			if DR_MEASURES[pair] in DR_MEASURES_MINUS_ONE:
+				results.loc[filter_arr, "score"] = 1 - results.loc[filter_arr, "score"]
+			palette = [DR_MEASURES_PAIRCOLOR[pair]]
+			hue_order = [DR_MEASURES_NAME[pair]]
+		
+		sns.lineplot(
+			x = "perplexity", y="score", hue="measure", data=results[filter_arr], 
+			ax=axs[i], palette=palette, hue_order=hue_order, legend=False
+		)
+		
+		if type(pair) == tuple:
+			axs[i].lines[0].set_linestyle(DR_MEASURES_LINESTYLE[pair[0]])
+			axs[i].lines[1].set_linestyle(DR_MEASURES_LINESTYLE[pair[1]])
+		
+		axs[i].set_xscale("log")
+		axs[i].set_xlabel("Perplexity ($\sigma$)")
+		axs[i].set_ylabel("Score" if i == 0 else "")
+
+		axs[i].legend(labels=hue_order, title=None)
+		axs[i].set_title(titles[i])
+	
+	plt.tight_layout()
+
+
