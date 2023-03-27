@@ -11,7 +11,7 @@ Currently, Label-T&C is developed as a standalone python library.
 
 ## Installation & Usage
 
-Due to anonymity issue, Label-T&C will be served via `pip` after the academic paper appears in the peer-reviewed journal or conference!!
+Label-T&C will be served via `pip` after the academic paper appears in the peer-reviewed journal or conference!!
 Currently, you can clone the repository and directly call the function 
 
 ```python
