@@ -9,7 +9,7 @@ from ltnc import LabelTNC
 
 
 
-class HierarchicalLSNC:
+class HierarchicalLTNC:
 	def __init__(self, raw, emb, labels=[], cvm="btw_ch"):
 		"""
 		Initialize the instance
