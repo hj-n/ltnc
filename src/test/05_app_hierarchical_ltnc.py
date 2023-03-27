@@ -8,11 +8,6 @@ from hierarchical_ltnc import HierarchicalLTNC
 import numpy as np
 from tqdm import tqdm
 import os
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import altair as alt
-import itertools
 import json
 import warnings
 warnings.filterwarnings("ignore")

@@ -53,13 +53,13 @@ print("Label-Continuity (LC):", lc_score)
 
 - numpy
 - scipy
-- ltnc
+- scikit-learn
 - matplotlib
 - seaborn
-- cvm
 - pandas
 - umap-learn
 - numba
+- snc
 
 We provide the `environment.yml` file for creating the conda environment.
 You can create the environment by executing the following command:
