@@ -11,8 +11,9 @@ Currently, Label-T&C is developed as a standalone python library. In this reposi
 
 ## Installation & Usage
 
-Label-T&C will be served via `pip` after the academic paper appears in the peer-reviewed journal or conference!!
-Currently, you can clone the repository and directly call the function 
+Label-T&C will be served via `pip` after the academic paper appears in the peer-reviewed journal or conference.
+Currently, you can clone the repository and directly call the function.
+Please install the requirments  or execute the conda environment before using the library (see below section).
 
 ```python
 import sys
@@ -49,6 +50,23 @@ print("Label-Continuity (LC):", lc_score)
 `raw` is the original (raw) high-dimensional data which used to generate multidimensional projections. It should be a 2D array (or a 2D np array) with shape `(n_samples, n_dim)` where `n_samples` denotes the number of data points in dataset and `n_dim` is the original size of dimensionality (number of features). `emb` is the projected (embedded) data of `raw` (i.e., MDP result). It should be a 2D array (or a 2D np array) with shape `(n_samples, n_reduced_dim)` where `n_reduced_dim` denotes the dimensionality of projection. `labels` should be a 1d array with length `n_samples` which holds the categorical information of class labels.
 
 ## Requirements
+
+- numpy
+- scipy
+- ltnc
+- matplotlib
+- seaborn
+- cvm
+- pandas
+- umap-learn
+- numba
+
+We provide the `environment.yml` file for creating the conda environment.
+You can create the environment by executing the following command:
+
+```bash
+conda env create -f environment.yml 
+```
 
 ## Reproducing Experiments
 
