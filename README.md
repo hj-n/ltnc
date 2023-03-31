@@ -92,7 +92,7 @@ Also, the execution requires the data files installed in the `./data/` directory
 
 ~Please place the `.zip` file which can be downloaded [here](https://TODO) in the `./data/` directory and unzip it. Then, the codes will run properly~
 
-**We sumbitted `.zip` file containing the data files.**
+**We sumbitted `.zip` file containing the data files as supplemental.**
 
 
 ## API
