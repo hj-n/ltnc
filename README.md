@@ -3,7 +3,7 @@
 </p>
 
 **Label Trustworthiness and Continuity (Label-T&C)** is novel measures for evaluating the reliability of cluster structure preservation in dimensionality reduction (DR) embeddings, relying on class labels. 
-It addresses the shortcomings of traditional evaluation methods using class labels, which assesses how well the classes form clusters (i.e., *cluster-label matching*; CLM) in the embeddings assuming the CLM is good in the original space. Label-T&C, on the other hand, evaluates CLM in both the high-dimensional and the original space, thus more accurately measure the reliability of DR embeddings. 
+It addresses the shortcomings of traditional evaluation methods using class labels, which assesses how well the classes form clusters (i.e., *cluster-label matching*; CLM) in the embeddings assuming the CLM is good in the original space. Label-T&C, on the other hand, evaluates CLM in both the high-dimensional and the embedding, thus more accurately measure the reliability of DR embeddings. 
 
 Label-T quantifies the distortions caused by class compression, with a lower score indicating that points of different classes are closer in the embedding compared to the original data. Label-C evaluates distortions related to class stretching, where a lower score means that points of different classes are more stretched in the embedding compared to the original data.
 
@@ -82,10 +82,10 @@ The Brief explanation of each code is as follows:
 - `02_sensitivity_F.py`: Reproduce the sensitivity analysis experiment F (Section 5.1)
 - `02_sensitivity_figure.py`: Generate a figure, summaizing the results of sensitivity analysis experiments (Section 5.1)
 - `03_scalability.py`: Reproduce the scalability experiment (Section 5.2)
-- `04_app_tsne_perplexity.py`: Reproduce the application 1 with t-SNE (Section 6.1)
-- `04_app_tsne_perplexity_heatmap.py`: Reproduce the Fashion-MNIST examination in application 1 (Section 6.1)
-- `05_app_hierarchical_ltnc.py`: Reproduce the application 2 with hierarchical ltnc (Section 6.2)
-- `05_app_hierarchical_ltnc_figure.py`: Generate a figure, summarizing the results of application 2 (Section 6.2)
+- `04_app_tsne_perplexity.py`: Reproduce the case study 1 with t-SNE (Section 6.1)
+- `04_app_tsne_perplexity_heatmap.py`: Reproduce the Fashion-MNIST examination in case study 1 (Section 6.1)
+- `05_app_hierarchical_ltnc.py`: Reproduce the cast study 2 with hierarchical ltnc (Section 6.2)
+- `05_app_hierarchical_ltnc_figure.py`: Generate a figure, summarizing the results of case study 2 (Section 6.2)
 
 The execution of the experiments need to be done in the order we presented above.
 Also, the execution requires the data files installed in the `./data/` directory.
