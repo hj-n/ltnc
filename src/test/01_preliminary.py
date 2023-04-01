@@ -41,11 +41,6 @@ DATASETS_HIGH = [
  'optical_recognition_of_handwritten_digits', 'wireless_indoor_localization','mnist64'
 ]
 
-# DATASETS_INTER = [
-#  'glass_identification', 'cifar10', 'wine_quality', 'extyaleb', 'flickr_material_database', 
-#   'turkish_music_emotion', 'breast_tissue', 'birds_bones_and_living_habits', 'cnae9', 'yeast', 
-
-# ]
 
 DATASETS_LOW = [
  'epileptic_seizure_recognition', 'customer_classification','skillcraft1_master_table_dataset',
@@ -92,10 +87,10 @@ df_low = run_preliminary("01_preliminary_low", DATASETS_LOW)
 
 
 sns.set_style("whitegrid")
-fig, ax = plt.subplots(2, 1, figsize=(6, 2.6), sharex=True)
+fig, ax = plt.subplots(2, 1, figsize=(7, 2.6), sharex=True)
 for i, df in enumerate([df_high, df_low]):
 	sns.pointplot(y="DR Technique", x="Score", hue="DR Technique", data=df, ax=ax[i])
-	ax[i].set_title("Datasets with Good CLM" if i == 0 else "Datasets with Bad CLM")
+	ax[i].set_title("Labeled datasets with Good CLM" if i == 0 else "Labeled datasets with Bad CLM")
 	ax[i].set_yticklabels(DR_NAME)
 	ax[i].legend().remove()
 

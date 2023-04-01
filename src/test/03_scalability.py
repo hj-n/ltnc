@@ -39,7 +39,7 @@ DR_MEASURES = {
   "KL Divergence": kl_div_time,
   "DTM": dtm_time,
   "CA-T&C": class_aware_trust_conti_time,
-  "SC": silhouette_time,
+  "Silhouette": silhouette_time,
   "DSC": dsc_time
 }
 
