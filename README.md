@@ -2,10 +2,10 @@
   <h1 align="center">Label-Trustworthiness & Label-Continuity</h1>
 </p>
 
-**Label Trustworthiness and Continuity (Label-T&C)** is a novel measures for evaluating the reliability of cluster structure preservation in dimensionality reduction (DR) embeddings, relying on class labels. 
-It addresses the shortcomings of traditional evaluation methods using class labels, which assesses the how well the classes form clusters (i.e., *cluster-label matching*; CLM) in the embeddings using clustering validation measures (CVM). Label-T&C, on the other hand, evaluates CLM in both high-dimensional and the original space, thus more accurately measure the reliability of DR emebeddings. 
+**Label Trustworthiness and Continuity (Label-T&C)** is novel measures for evaluating the reliability of cluster structure preservation in dimensionality reduction (DR) embeddings, relying on class labels. 
+It addresses the shortcomings of traditional evaluation methods using class labels, which assesses how well the classes form clusters (i.e., *cluster-label matching*; CLM) in the embeddings assuming the CLM is good in the original space. Label-T&C, on the other hand, evaluates CLM in both the high-dimensional and the embedding, thus more accurately measure the reliability of DR embeddings. 
 
-Label-T quantifies the distortion caused by class compression, with a lower score indicating that points of different classes are closer in the embedding compared to the original data. Label-C evaluates distortion related to class stretching, where a lower score signifies that points of different classes are more stretched in the embedding compared to the original data.
+Label-T quantifies the distortions caused by class compression, with a lower score indicating that points of different classes are closer in the embedding compared to the original data. Label-C evaluates distortions related to class stretching, where a lower score means that points of different classes are more stretched in the embedding compared to the original data.
 
 Currently, Label-T&C is developed as a standalone python library. In this repository, we provide the measures along with the codes for reproducing our academic paper ***"Classes are not Clusters: Improving Label-based Evaluation of Dimensionality Reduction"*** that introduces Label-T&C.
 
@@ -13,7 +13,7 @@ Currently, Label-T&C is developed as a standalone python library. In this reposi
 
 Label-T&C will be served via `pip` after the academic paper appears in the peer-reviewed journal or conference.
 Currently, you can clone the repository and directly call the function.
-Please install the requirments  or execute the conda environment before using the library (see below section).
+Please install the requirements  or execute the conda environment before using the library (see below section).
 
 ```python
 import sys
@@ -82,14 +82,17 @@ The Brief explanation of each code is as follows:
 - `02_sensitivity_F.py`: Reproduce the sensitivity analysis experiment F (Section 5.1)
 - `02_sensitivity_figure.py`: Generate a figure, summaizing the results of sensitivity analysis experiments (Section 5.1)
 - `03_scalability.py`: Reproduce the scalability experiment (Section 5.2)
-- `04_app_tsne_perplexity.py`: Reproduce the application 1 with t-SNE (Section 6.1)
-- `04_app_tsne_perplexity_heatmap.py`: Reproduce the Fashion-MNIST examination in application 1 (Section 6.1)
-- `05_app_hierarchical_ltnc.py`: Reproduce the application 2 with hierarchical ltnc (Section 6.2)
-- `05_app_hierarchical_ltnc_figure.py`: Generate a figure, summarizing the results of application 2 (Section 6.2)
+- `04_app_tsne_perplexity.py`: Reproduce the case study 1 with t-SNE (Section 6.1)
+- `04_app_tsne_perplexity_heatmap.py`: Reproduce the Fashion-MNIST examination in case study 1 (Section 6.1)
+- `05_app_hierarchical_ltnc.py`: Reproduce the cast study 2 with hierarchical ltnc (Section 6.2)
+- `05_app_hierarchical_ltnc_figure.py`: Generate a figure, summarizing the results of case study 2 (Section 6.2)
 
 The execution of the experiments need to be done in the order we presented above.
 Also, the execution requires the data files installed in the `./data/` directory.
-Please place the `.zip` file which can be downloadable at [here](https://TODO) in the `./data/` directory and unzip it. Then, the codes will be able to properly run.
+
+~Please place the `.zip` file which can be downloaded [here](https://TODO) in the `./data/` directory and unzip it. Then, the codes will run properly~
+
+**We sumbitted `.zip` file containing the data files as supplemental.**
 
 
 ## API
