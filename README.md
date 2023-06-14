@@ -133,7 +133,7 @@ Runs the algorithm and returns the score of Label-Trustworthiness (LT) and Label
 
 ### `HierarchicalLTNC` class in `src/ltnc/hierarchical_ltnc.py`
 
-#### `__init__(self, raw, emb, labels=[], cvm="btw_ch")`
+#### `__init__(self, raw, emb, cvm="btw_ch")`
 
 Initializes the HierarchicalLTNC class.
 
