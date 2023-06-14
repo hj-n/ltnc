@@ -37,9 +37,11 @@ axs[2, 0].set_title("Measures w/ Labels", rotation="vertical", x=-0.38, y=-0.03,
 
 
 ### plot legends
-sh.legend_ax(bbox_to_anchor=(0.4, -0.25), ncol=8, fontsize=10, ax= axs[2, 3])
+sh.legend_ax(bbox_to_anchor=(0.4, -0.16), ncol=4, fontsize=11, ax= axs[0, 3], index=(0,4))
+sh.legend_ax(bbox_to_anchor=(0.4, -0.16), ncol=8, fontsize=11, ax= axs[1, 3], index=(4,12))
+sh.legend_ax(bbox_to_anchor=(0.4, -0.26), ncol=4, fontsize=11, ax= axs[2, 3], index=(12,16))
 
+plt.subplots_adjust(bottom=0.2, hspace=0.48)
 
-plt.subplots_adjust(bottom=0.2)
 plt.savefig(f"./plot/02_sensitivity.png", dpi=300)
 plt.savefig(f"./plot/02_sensitivity.pdf", dpi=300)

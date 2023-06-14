@@ -12,6 +12,11 @@ from matplotlib.lines import Line2D
 import seaborn as sns
 import numpy as np
 
+import hdbscan
+from sklearn.cluster import KMeans
+from bayes_opt import BayesianOptimization
+from sklearn.metrics import silhouette_score
+
 from tqdm import tqdm
 
 DR_MEASURES = [
@@ -29,9 +34,9 @@ DR_MEASURES_NAME = [
 ]
 
 DR_MEASURES_LINESTYLE = [
-	"solid", "dashed", "solid", "dashed",    #### ours
-	"solid", "dashed", "solid", "dashed", "solid", "dashed", #### measures w/o labels 
-	(5, (10, 3)), (5, (10, 3)), "solid", "dashed", (5, (10, 3)), (5, (10, 3)) #### measures w/ labels
+	"solid", (5, (10, 3)), "solid", (5, (10, 3)),    #### ours
+	"solid", (5, (10, 3)), "solid", (5, (10, 3)), "solid", (5, (10, 3)), #### measures w/o labels 
+	"dotted", "dotted", "solid", (5, (10, 3)), "dotted", "dotted" #### measures w/ labels
 ]
 tab10  = sns.color_palette("tab10", 10)
 dark10 = sns.color_palette("dark", 10)
@@ -100,7 +105,7 @@ def run_all_metrics(raw, emb, labels):
 	}
 
 
-def compute_metrics(raw_arr, emb_arr, labels):
+def compute_metrics(raw_arr, emb_arr, labels_arr):
 	results = {}
 	for measure in DR_MEASURES:
 		results[measure] = []
@@ -111,6 +116,8 @@ def compute_metrics(raw_arr, emb_arr, labels):
 	elif isinstance(emb_arr, list):
 		arr_len = len(emb_arr)
 	
+
+	
 	for i in tqdm(range(arr_len)):
 		if isinstance(raw_arr, list):
 			raw = raw_arr[i]
@@ -118,6 +125,11 @@ def compute_metrics(raw_arr, emb_arr, labels):
 		else:
 			raw = raw_arr
 			emb = emb_arr[i]
+
+		if isinstance(labels_arr, list):
+			labels = labels_arr[i]
+		else:
+			labels = labels_arr
 		
 		result_single = run_all_metrics(raw, emb, labels)
 		for measure in DR_MEASURES:
@@ -147,14 +159,14 @@ def lineplot_ax(results, ax, index_range, x_label, y_label, title=None, invert_x
 		ax.set_title(title, fontsize=17)
 	
 
-def legend_ax(bbox_to_anchor, ncol, fontsize, ax):
+def legend_ax(bbox_to_anchor, ncol, fontsize, ax, index):
 	legend_elements = []
-	for i, name in enumerate(DR_MEASURES_NAME):
-		legend_elements.append(Line2D([0], [0], color=DR_MEASURES_COLOR[i], lw=1.5, label=name, linestyle=DR_MEASURES_LINESTYLE[i]))
+	for i, name in enumerate(DR_MEASURES_NAME[index[0]:index[1]]):
+		legend_elements.append(Line2D([0], [0], color=DR_MEASURES_COLOR[i + index[0]], lw=1.5, label=name, linestyle=DR_MEASURES_LINESTYLE[i + index[0]]))
 
 	ax.legend(handles=legend_elements, loc="upper center", bbox_to_anchor=bbox_to_anchor, ncol=ncol, fontsize=fontsize)
 	for i, text in enumerate(ax.get_legend().get_texts()):
-		text.set_color(DR_MEASURES_TEXT_COLOR[i])
+		text.set_color(DR_MEASURES_TEXT_COLOR[i + index[0]])
 
 
 def lineplot_agg(results, pair_idx_arr, titles, file_path):
@@ -196,3 +208,60 @@ def lineplot_agg(results, pair_idx_arr, titles, file_path):
 	plt.tight_layout()
 
 
+
+def clustering_based_label_extractor(raw, clustering_tech):
+	if clustering_tech == "hdbscan":
+		bounds = {
+			"epsilon": (0.01, 1.0),
+			"min_samples": (1, 10),
+			"min_cluster_size": (2, 50),
+		}
+
+		def optimizer_func(epsilon, min_samples, min_cluster_size):
+
+			clusterer = hdbscan.HDBSCAN(
+				min_cluster_size=int(min_cluster_size), min_samples=int(min_samples), metric="euclidean", 
+				cluster_selection_epsilon=float(epsilon)
+			)
+			clusterer.fit(raw)
+			labels = clusterer.labels_
+			return silhouette_score(raw, labels, metric="euclidean")
+	
+	elif clustering_tech == "kmeans":
+		bounds = {
+			"n_clusters": (2, int(np.sqrt(len(raw)))),
+		}
+
+		def optimizer_func(n_clusters):
+			clusterer = KMeans(n_clusters=int(n_clusters), random_state=0)
+			clusterer.fit(raw)
+			labels = clusterer.labels_
+			return silhouette_score(raw, labels, metric="euclidean")
+	
+
+	optimizer = BayesianOptimization(
+		f=optimizer_func,
+		pbounds=bounds,
+		random_state=1,
+		allow_duplicate_points=True
+	)
+
+	optimizer.maximize(init_points=10, n_iter=50)
+
+	if clustering_tech == "hdbscan":
+		clusterer = hdbscan.HDBSCAN(
+			min_cluster_size=int(optimizer.max["params"]["min_cluster_size"]), 
+			min_samples=int(optimizer.max["params"]["min_samples"]), 
+			metric="euclidean", 
+			cluster_selection_epsilon=float(optimizer.max["params"]["epsilon"])
+		
+		)
+		clusterer.fit(raw)
+		labels = clusterer.labels_
+	elif clustering_tech == "kmeans":
+		clusterer = KMeans(n_clusters=int(optimizer.max["params"]["n_clusters"]), random_state=0)
+		clusterer.fit(raw)
+		labels = clusterer.labels_
+	
+	return labels
+	
